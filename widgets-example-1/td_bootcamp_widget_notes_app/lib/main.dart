@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:td_bootcamp_widget_notes_app/home.dart';
+import 'package:td_bootcamp_widget_notes_app/themes/theme.dart';
+import 'package:td_bootcamp_widget_notes_app/themes/util.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,13 +12,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = createTextTheme(context, "Nunito", "Nunito");
+    MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: const HomeScreen(),
     );
   }

@@ -17,3 +17,12 @@ TextTheme createTextTheme(
   );
   return textTheme;
 }
+
+ThemeData getFabCustomTheme({required BuildContext context}){
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    return Theme.of(context)
+            .copyWith(colorScheme: Theme.of(context)
+              .colorScheme.copyWith(
+                primaryContainer: brightness == Brightness.light ? const Color(0xFFFFFFFF) : const Color(0xFF252525),
+                onPrimaryContainer: brightness == Brightness.dark ? const Color(0xFFFFFFFF) : const Color(0xFF252525)));
+  }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:td_bootcamp_widget_notes_app/home_screen.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/theme.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/util.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/util.dart';
 
 class InfoScreen extends StatelessWidget{

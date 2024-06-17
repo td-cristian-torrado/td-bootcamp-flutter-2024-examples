@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:td_bootcamp_widget_notes_app/home_screen.dart';
+import 'package:td_bootcamp_widget_notes_app/home_screen_mvvm/home_screen_mvvm.dart';
+import 'package:td_bootcamp_widget_notes_app/home_screen_mvvm/vm/home_screen_vm.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/theme.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/util.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: const HomeScreen(),
+      home: HomeScreenMVVM(vm: HomeScreenVm()),
     );
   }
 }

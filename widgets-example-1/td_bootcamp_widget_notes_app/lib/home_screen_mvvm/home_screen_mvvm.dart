@@ -5,40 +5,51 @@ import 'package:td_bootcamp_widget_notes_app/home_screen_mvvm/vm/home_screen_vm.
 import 'package:td_bootcamp_widget_notes_app/info_screen.dart';
 import 'package:td_bootcamp_widget_notes_app/themes/util.dart';
 
-final homeScreenViewModelProvider = Provider((_) => HomeScreenVm());
-
 class HomeScreenMVVM extends ConsumerWidget {
-  const HomeScreenMVVM({super.key});
+
+  final HomeScreenVm _vm;
+  late final StateNotifierProvider<HomeScreenVm,HomeScreenState> _homeScreenViewModelProvider;
+
+  HomeScreenMVVM({super.key, required HomeScreenVm vm }) : _vm = vm {
+    _homeScreenViewModelProvider = 
+      StateNotifierProvider<HomeScreenVm,HomeScreenState>((ref) => _vm);
+  }
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-      final HomeScreenVm homeScreenVm = ref.watch(homeScreenViewModelProvider);
+     final HomeScreenState state = ref.watch(_homeScreenViewModelProvider);
+     ref.listen<HomeScreenState>(_homeScreenViewModelProvider, (previousState, state) async{
+        if(previousState?.navigationState != state.navigationState && 
+        state.navigationState == HomeNavigationState.navigateToInfo){
+             Navigator.of(context)
+             .push(MaterialPageRoute(builder: (context) => const InfoScreen()))
+             .then((value) => _vm.onBackFromInfoView());
+        }
+     });
      return Scaffold(
         appBar: AppBar(
           title: Text('Notes', style: Theme.of(context).textTheme.displaySmall),
           actions: [
             Theme(
               data: getFabCustomTheme(context: context),
-              child: const FloatingActionButton.small(onPressed: null, child: Icon(Icons.search))),
+              child: const FloatingActionButton
+              .small(onPressed: null, child: Icon(Icons.search))),
              Padding(
               padding: const EdgeInsets.fromLTRB(21,0,25,0),
               child: Theme(
                 data: getFabCustomTheme(context: context),
-                child:  FloatingActionButton.small(onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const InfoScreen(),
-                      ),
-                  );
-                }, child: const Icon(Icons.info))),
+                child:  FloatingActionButton.small(
+                  onPressed: ()=> _vm.onInfoBtnPressed(), 
+                  child: const Icon(Icons.info))),
             ),
           ],
         ),
-        body: homeScreenVm.state.notesList.isEmpty ? _emptyViewFactory(context: context) : _noteListFactory(context: context, notesList: homeScreenVm.state.notesList),
+        body: state.notesList.isEmpty ? _emptyViewFactory(context: context) : 
+        _noteListFactory(context: context, notesList: state.notesList),
         floatingActionButton: Theme(
           data: getFabCustomTheme(context: context), 
-          child: const FloatingActionButton(
-            onPressed: null, child: Icon(Icons.add)),
+          child: FloatingActionButton(
+            onPressed: () => _vm.onPlusFabBtnPressed() , child: const Icon(Icons.add)),
         ),
     );
   }
@@ -73,7 +84,11 @@ class HomeScreenMVVM extends ConsumerWidget {
         ); 
   }
 
-  Widget _noteListFactory({required List<StickyNoteModel> notesList, required BuildContext context}){
-    return ListView(children: notesList.reversed.map((stickyNote) => _cardFactory(stickyNote: stickyNote, context: context)).toList(),);
+  Widget _noteListFactory({
+    required List<StickyNoteModel> notesList, 
+    required BuildContext context}){
+    return ListView(children: notesList.reversed
+    .map((stickyNote) => _cardFactory(stickyNote: stickyNote, context: context))
+    .toList());
   }
 }
